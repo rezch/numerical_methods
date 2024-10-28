@@ -9,111 +9,16 @@ struct Matrix {
 
     using _Mt = Matrix<_Tp, ROWS, COLS>;
 
-#ifndef EPS
-    #define _EPS 1e-9
-#else
-    #define _EPS EPS
-#endif
-
     _Tp* operator [] (int index) {
         return data_[index];
     }
-
-    struct iterator {
-        using iterator_category = std::random_access_iterator_tag;
-        using value_type        = _Tp;
-        using difference_type   = ssize_t;
-        using pointer           = _Tp*;
-        using reference         = _Tp&;
-        using const_reference   = const _Tp&;
-
-        iterator(_Tp* m) : _pos(0), _data(m) { };
-        iterator(_Tp* m, difference_type pos) : _pos(pos), _data(m) { };
-
-        inline bool operator == (const iterator& other) const {
-            return _pos == other._pos;
-        }
-        inline bool operator != (const iterator& other) const {
-            return _pos != other._pos;
-        }
-        inline bool operator < (const iterator& other) const {
-            return _pos < other._pos;;
-        }
-        inline bool operator <= (const iterator& other) const {
-            return _pos <= other._pos;;
-        }
-        inline bool operator > (const iterator& other) const {
-            return _pos > other._pos;;
-        }
-        inline bool operator >= (const iterator& other) const {
-            return _pos >= other._pos;;
-        }
-
-        iterator& operator += (const difference_type& movement) {
-            _pos += movement;
-            return *this;
-        }
-        iterator& operator -= (const difference_type& movement) {
-            _pos -= movement;
-            return *this;
-        }
-        iterator& operator ++ () {
-            ++_pos;
-            return *this;
-        }
-        iterator& operator -- () {
-            --_pos;
-            return *this;
-        }
-        iterator operator ++ (int) {
-            auto tmp(*this);
-            ++_pos;
-            return tmp;
-        }
-        iterator operator -- (int) {
-            auto tmp(*this);
-            --_pos;
-            return tmp;
-        }
-        iterator operator + (const difference_type& movement) const {
-            auto tmp(*this);
-            tmp += movement;
-            return tmp;
-        }
-        iterator operator - (const difference_type& movement) const {
-            auto tmp(*this);
-            tmp -= movement;
-            return tmp;
-        }
-
-        difference_type operator + (const iterator& other) const {
-            return _pos + other._pos;
-        }
-        difference_type operator - (const iterator& other) const {
-            return _pos - other._pos;
-        }
-
-        reference operator * () {
-            return _data[_pos];
-        }
-        const_reference operator * () const {
-            return _data[_pos];
-        }
-        pointer operator-> () {
-            return &_data[_pos];
-        }
-
-    private:
-        difference_type _pos{};
-        pointer         _data;
-    };
     
-    iterator begin() const {
-        return { (_Tp*)data_, 0 };
+    _Tp* begin() const {
+        return (_Tp*)data_;
     }
 
-    iterator end() const {
-        return { (_Tp*)data_, ROWS * COLS };
+    _Tp* end() const {
+        return (_Tp*)data_ + ROWS * COLS;
     }
 
     void T() {
@@ -176,13 +81,11 @@ struct Matrix {
     }
 
 #undef FOR
-#undef _EPS
 
     _Tp data_[ROWS][COLS];
     static constexpr int rows = ROWS;
     static constexpr int cols = COLS;
 };
-
 
 signed main() {
     Matrix<float, 3, 3> a = {{
